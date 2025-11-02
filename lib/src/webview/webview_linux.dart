@@ -34,12 +34,19 @@ class _WebviewFlutterState extends State<WebviewLinux> {
 
   Future<void> initPlatformState() async {
     await WebviewManager().initialize(userAgent: "test/userAgent");
+    await _controller.initialize(widget.url);
     await _controller.loadUrl(widget.url);
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    // Return loading widget until controller is initialized
+    if (!_controller.value) {
+      return _controller.loadingWidget;
+    }
     return _controller.webviewWidget;
   }
 }
